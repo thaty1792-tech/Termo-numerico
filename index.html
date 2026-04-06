@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termo Numérico</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Termo Numérico</h1>
+    </header>
+
+    <section>
+        <div id="caixas" class="caixas-container"></div>
+        
+        <div class="controles">
+            <button class="btn-reiniciar" onclick="iniciarJogo()">Reiniciar Jogo</button>
+            <button class="btn-ajuda" onclick="mostrarPopup()">Dúvidas</button>
+        </div>
+
+        <div id="popup" class="popup">
+            <h3>Regras do Jogo</h3>
+            <p>Descubra o código secreto de 5 números:</p>
+            <ul>
+                <li><span style="color: green; font-weight: bold;">Verde</span>: Número correto na posição correta.</li>
+                <li><span style="color: #d4d400; font-weight: bold;">Amarelo</span>: O número existe no código, mas noutra posição.</li>
+                <li><span style="color: #787c7e; font-weight: bold;">Cinza</span>: O número não pertence ao código.</li>
+            </ul>
+            <p>Preencha os campos e aperte Enter para verificar.</p>
+            <button onclick="fecharPopup()">Fechar</button>
+        </div>
+
+        <div id="resultado"></div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
