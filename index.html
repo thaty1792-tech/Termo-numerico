@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Termo Numérico</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,12 +12,14 @@
     </header>
 
     <section>
-        <div id="caixas" class="caixas-container"></div>
+        <form id="jogo-form" onsubmit="event.preventDefault(); verificarPalavra();">
+            <div id="caixas" class="caixas-container"></div>
+            <button type="submit" style="display: none;"></button>
+        </form>
         
         <div class="controles">
             <button class="btn-reiniciar" onclick="iniciarJogo()">Reiniciar Jogo</button>
             <button class="btn-ajuda" onclick="mostrarPopup()">Dúvidas</button>
-            <button class="btn-verificar" onclick="verificarPalavra()">Verificar</button>
         </div>
 
         <div id="popup" class="popup">
@@ -25,10 +27,10 @@
             <p>Descubra o código secreto de 5 números:</p>
             <ul>
                 <li><span style="color: green; font-weight: bold;">Verde</span>: Número correto na posição correta.</li>
-                <li><span style="color: #d4d400; font-weight: bold;">Amarelo</span>: O número existe no código, mas noutra posição.</li>
+                <li><span style="color: #d4d400; font-weight: bold;">Amarelo</span>: O número existe, mas em outra posição.</li>
                 <li><span style="color: #787c7e; font-weight: bold;">Cinza</span>: O número não pertence ao código.</li>
             </ul>
-            <p>Preencha os campos e clique em "Verificar".</p>
+            <p>Digite os números e pressione <strong>Enter</strong> para verificar.</p>
             <button onclick="fecharPopup()">Fechar</button>
         </div>
 

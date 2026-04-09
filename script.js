@@ -5,21 +5,23 @@ const TAMANHO_CODIGO = 5;
 const numerosPermitidos = /^[0-9]$/;
 
 const codigosDisponiveis = [
-    "12345", "54321", "67890", "90817", "24680",
+    "15594", "54321", "67890", "67676", "24680",
     "13579", "48291", "73920", "86420", "97531",
     "10293", "56478", "32098", "81726", "45902",
-    "69012", "73184", "25894", "14783", "36925",
-    "80421", "59213", "61873", "90734", "28561",
-    "37490", "16284", "48372", "95021", "71395"
+    "61873", "90734", "28561", "37490", "16284",
+    "52918", "83647", "29475", "75319", "48162",
+    "69028", "31754", "84269", "20597", "56380",
+    "72914", "48620", "19375", "65829", "27490",
+    "83901", "56047", "32186", "90725", "14862",
+    "67539", "28410", "51973", "43098", "76284"
 ];
 
 function iniciarJogo() {
     palavraSecreta = codigosDisponiveis[Math.floor(Math.random() * codigosDisponiveis.length)];
     tentativas = 0;
     document.getElementById("resultado").textContent = "";
-    document.getElementById("resultado").style.color = "#007bff";
     criarCaixas();
-    focarPrimeiraCaixa();
+    setTimeout(focarPrimeiraCaixa, 100);
 }
 
 function criarCaixas() {
@@ -34,11 +36,13 @@ function criarCaixas() {
         for (let j = 0; j < TAMANHO_CODIGO; j++) {
             const input = document.createElement("input");
             input.type = "text";
-            input.inputMode = "numeric";
+            input.inputMode = "numeric"; // Garante teclado numérico no mobile
             input.maxLength = 1;
             input.classList.add("caixa-letra");
             input.id = `caixa${i}${j}`;
+            input.autocomplete = "off";
             
+            // Gerencia a digitação e avanço automático
             input.addEventListener('input', (e) => {
                 if (numerosPermitidos.test(e.target.value)) {
                     focarProxima(i, j);
@@ -47,14 +51,14 @@ function criarCaixas() {
                 }
             });
 
+            // Gerencia o Backspace e o Enter
             input.addEventListener('keydown', (e) => {
                 if (e.key === "Backspace" && !e.target.value) {
                     focarAnterior(i, j);
                 }
-            });
-
-            input.addEventListener('keyup', (e) => {
-                if (e.key === "Enter") verificarPalavra();
+                if (e.key === "Enter") {
+                    // O form cuidará de chamar verificarPalavra()
+                }
             });
 
             linha.appendChild(input);
@@ -71,8 +75,7 @@ function verificarPalavra() {
     for (let c of caixas) palpite += c.value;
 
     if (palpite.length < TAMANHO_CODIGO) {
-        alert("Preencha todos os 5 números!");
-        return;
+        return; // Não faz nada se não estiver completo
     }
 
     let resultadoCores = new Array(TAMANHO_CODIGO).fill("cinza");
@@ -82,8 +85,8 @@ function verificarPalavra() {
         contagemSecretos[num] = (contagemSecretos[num] || 0) + 1;
     }
 
+    // Primeiro passo: Verdes (posições exatas)
     let acertos = 0;
-
     for (let i = 0; i < TAMANHO_CODIGO; i++) {
         if (palpite[i] === palavraSecreta[i]) {
             resultadoCores[i] = "verde";
@@ -92,6 +95,7 @@ function verificarPalavra() {
         }
     }
 
+    // Segundo passo: Amarelos (existe em outra posição)
     for (let i = 0; i < TAMANHO_CODIGO; i++) {
         if (resultadoCores[i] === "cinza") {
             let numPalpite = palpite[i];
@@ -102,29 +106,24 @@ function verificarPalavra() {
         }
     }
 
+    // Aplicar as cores visualmente
     for (let i = 0; i < TAMANHO_CODIGO; i++) {
         caixas[i].style.color = "white";
-
-        if (resultadoCores[i] === "verde") {
-            caixas[i].style.backgroundColor = "#6aaa64";
-        } else if (resultadoCores[i] === "amarelo") {
-            caixas[i].style.backgroundColor = "#c9b458";
-        } else {
-            caixas[i].style.backgroundColor = "#787c7e";
-        }
+        caixas[i].style.border = "none";
+        if (resultadoCores[i] === "verde") caixas[i].style.backgroundColor = "#538d4e";
+        else if (resultadoCores[i] === "amarelo") caixas[i].style.backgroundColor = "#b59f3b";
+        else caixas[i].style.backgroundColor = "#3a3a3c";
     }
 
     if (acertos === TAMANHO_CODIGO) {
-        document.getElementById("resultado").textContent = "Parabéns! Código correto!";
-        document.getElementById("resultado").style.color = "green";
+        document.getElementById("resultado").textContent = "Parabéns! Você acertou!";
+        document.getElementById("resultado").style.color = "#538d4e";
         bloquearTudo();
     } else {
         tentativas++;
-
         if (tentativas === MAX_TENTATIVAS) {
-            document.getElementById("resultado").textContent =
-                `Fim de jogo! O código era: ${palavraSecreta}`;
-            document.getElementById("resultado").style.color = "red";
+            document.getElementById("resultado").textContent = `Fim de jogo! O código era: ${palavraSecreta}`;
+            document.getElementById("resultado").style.color = "#818384";
             bloquearTudo();
         } else {
             linhas[tentativas].classList.remove("linha-bloqueada");
@@ -134,29 +133,29 @@ function verificarPalavra() {
 }
 
 function focarPrimeiraCaixa() {
-    document.getElementById("caixa00").focus();
+    const primeira = document.getElementById("caixa00");
+    if (primeira) primeira.focus();
 }
 
 function focarProxima(l, c) {
-    const prox = document.getElementById(`caixa${l}${c+1}`);
-    if (prox) prox.focus();
+    if (c < TAMANHO_CODIGO - 1) {
+        const prox = document.getElementById(`caixa${l}${c+1}`);
+        if (prox) prox.focus();
+    }
 }
 
 function focarAnterior(l, c) {
-    const ant = document.getElementById(`caixa${l}${c-1}`);
-    if (ant) ant.focus();
+    if (c > 0) {
+        const ant = document.getElementById(`caixa${l}${c-1}`);
+        if (ant) ant.focus();
+    }
 }
 
 function bloquearTudo() {
     document.querySelectorAll(".caixa-letra").forEach(c => c.disabled = true);
 }
 
-function mostrarPopup() {
-    document.getElementById("popup").style.display = "block";
-}
-
-function fecharPopup() {
-    document.getElementById("popup").style.display = "none";
-}
+function mostrarPopup() { document.getElementById("popup").style.display = "block"; }
+function fecharPopup() { document.getElementById("popup").style.display = "none"; }
 
 window.onload = iniciarJogo;

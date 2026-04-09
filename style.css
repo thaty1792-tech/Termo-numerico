@@ -1,73 +1,86 @@
 body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
     text-align: center;
-    background-color: #1c1e20;
+    background-color: #121213; /* Cor mais próxima do Termo original */
+    color: white;
     margin: 0;
-    padding: 20px;
+    padding: 10px;
+    touch-action: manipulation;
 }
+
 h1 {
     color: #cbcfd4; 
-    font-size: 2.5rem; 
-    margin-bottom: 20px;
+    font-size: 2rem; 
+    margin: 10px 0;
 }
 
 .caixas-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .linha-caixas {
     display: flex;
-    gap: 8px;
+    gap: 5px;
 }
 
 .caixa-letra {
-    width: 50px;
-    height: 50px;
+    width: 14vw;
+    height: 14vw;
+    max-width: 55px;
+    max-height: 55px;
     text-align: center;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: bold;
-    border: 2px solid #ccc;
-    border-radius: 6px;
+    border: 2px solid #3a3a3c;
+    border-radius: 4px;
+    background-color: transparent;
+    color: white;
+    text-transform: uppercase;
+    /* Impede zoom automático no iOS */
+    font-size: 16px; 
+}
+
+/* Garante que o input mantenha um tamanho visual bom mesmo com o font-size de 16px */
+@media (min-width: 450px) {
+    .caixa-letra { font-size: 1.8rem; }
 }
 
 .linha-bloqueada {
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.8;
 }
 
-.controles { margin: 25px 0; }
+.controles { margin: 20px 0; display: flex; justify-content: center; gap: 10px; }
 
 button {
-    padding: 12px 20px;
-    font-size: 1rem;
+    padding: 12px 15px;
+    font-size: 0.9rem;
     cursor: pointer;
     border: none;
-    border-radius: 5px;
-    transition: 0.3s;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: 0.2s;
 }
 
-.btn-reiniciar { background-color: #28a745; color: white; }
-.btn-ajuda { background-color: #6c757d; color: white; }
-
-@media (max-width: 450px) {
-    .caixa-letra { width: 40px; height: 40px; font-size: 1.3rem; }
-    .linha-caixas { gap: 5px; }
-}
+.btn-reiniciar { background-color: #538d4e; color: white; }
+.btn-ajuda { background-color: #818384; color: white; }
 
 .popup {
     display: none;
     position: fixed;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 85%; max-width: 380px;
-    background: white;
-    padding: 25px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    border-radius: 10px;
+    width: 85%; max-width: 350px;
+    background: #1e1e1f;
+    color: white;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    border-radius: 8px;
     z-index: 100;
+    border: 1px solid #3a3a3c;
 }
 
 #resultado { margin-top: 20px; font-weight: bold; font-size: 1.2rem; }
