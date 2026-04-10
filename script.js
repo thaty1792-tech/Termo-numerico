@@ -21,7 +21,10 @@ function iniciarJogo() {
     tentativas = 0;
     document.getElementById("resultado").textContent = "";
     criarCaixas();
-    setTimeout(focarPrimeiraCaixa, 100);
+    // Apenas foca automaticamente se não for mobile para evitar abrir o teclado nativo
+    if (window.innerWidth > 768) {
+        setTimeout(focarPrimeiraCaixa, 100);
+    }
 }
 
 function criarCaixas() {
@@ -36,13 +39,17 @@ function criarCaixas() {
         for (let j = 0; j < TAMANHO_CODIGO; j++) {
             const input = document.createElement("input");
             input.type = "text";
-            input.inputMode = "numeric"; // Garante teclado numérico no mobile
+            input.inputMode = "numeric";
             input.maxLength = 1;
             input.classList.add("caixa-letra");
             input.id = `caixa${i}${j}`;
             input.autocomplete = "off";
             
-            // Gerencia a digitação e avanço automático
+            // Se for mobile, torna o input apenas leitura para usar o teclado virtual
+            if (window.innerWidth <= 768) {
+                input.setAttribute('readonly', 'readonly');
+            }
+            
             input.addEventListener('input', (e) => {
                 if (numerosPermitidos.test(e.target.value)) {
                     focarProxima(i, j);
@@ -51,13 +58,9 @@ function criarCaixas() {
                 }
             });
 
-            // Gerencia o Backspace e o Enter
             input.addEventListener('keydown', (e) => {
                 if (e.key === "Backspace" && !e.target.value) {
                     focarAnterior(i, j);
-                }
-                if (e.key === "Enter") {
-                    // O form cuidará de chamar verificarPalavra()
                 }
             });
 
@@ -67,6 +70,39 @@ function criarCaixas() {
     }
 }
 
+// Funções para o Teclado Virtual
+function digitarNoTeclado(numero) {
+    const col = obterColunaAtual();
+    const inputAtual = document.getElementById(`caixa${tentativas}${col}`);
+    
+    if (inputAtual && inputAtual.value === "") {
+        inputAtual.value = numero;
+        focarProxima(tentativas, col);
+    }
+}
+
+function apagarNoTeclado() {
+    let col = obterColunaAtual();
+    let inputAtual = document.getElementById(`caixa${tentativas}${col}`);
+    
+    // Se a caixa atual estiver vazia e não for a primeira, volta e apaga
+    if (inputAtual.value === "" && col > 0) {
+        const inputAnterior = document.getElementById(`caixa${tentativas}${col - 1}`);
+        inputAnterior.value = "";
+    } else {
+        inputAtual.value = "";
+    }
+}
+
+function obterColunaAtual() {
+    const linha = document.querySelectorAll(".linha-caixas")[tentativas];
+    const caixas = linha.querySelectorAll(".caixa-letra");
+    for (let i = 0; i < caixas.length; i++) {
+        if (caixas[i].value === "") return i;
+    }
+    return TAMANHO_CODIGO - 1;
+}
+
 function verificarPalavra() {
     const linhas = document.querySelectorAll(".linha-caixas");
     const caixas = linhas[tentativas].getElementsByClassName("caixa-letra");
@@ -74,9 +110,7 @@ function verificarPalavra() {
     let palpite = "";
     for (let c of caixas) palpite += c.value;
 
-    if (palpite.length < TAMANHO_CODIGO) {
-        return; // Não faz nada se não estiver completo
-    }
+    if (palpite.length < TAMANHO_CODIGO) return;
 
     let resultadoCores = new Array(TAMANHO_CODIGO).fill("cinza");
     let contagemSecretos = {};
@@ -85,7 +119,6 @@ function verificarPalavra() {
         contagemSecretos[num] = (contagemSecretos[num] || 0) + 1;
     }
 
-    // Primeiro passo: Verdes (posições exatas)
     let acertos = 0;
     for (let i = 0; i < TAMANHO_CODIGO; i++) {
         if (palpite[i] === palavraSecreta[i]) {
@@ -95,7 +128,6 @@ function verificarPalavra() {
         }
     }
 
-    // Segundo passo: Amarelos (existe em outra posição)
     for (let i = 0; i < TAMANHO_CODIGO; i++) {
         if (resultadoCores[i] === "cinza") {
             let numPalpite = palpite[i];
@@ -106,7 +138,6 @@ function verificarPalavra() {
         }
     }
 
-    // Aplicar as cores visualmente
     for (let i = 0; i < TAMANHO_CODIGO; i++) {
         caixas[i].style.color = "white";
         caixas[i].style.border = "none";
@@ -127,7 +158,9 @@ function verificarPalavra() {
             bloquearTudo();
         } else {
             linhas[tentativas].classList.remove("linha-bloqueada");
-            document.getElementById(`caixa${tentativas}0`).focus();
+            if (window.innerWidth > 768) {
+                document.getElementById(`caixa${tentativas}0`).focus();
+            }
         }
     }
 }
@@ -140,14 +173,14 @@ function focarPrimeiraCaixa() {
 function focarProxima(l, c) {
     if (c < TAMANHO_CODIGO - 1) {
         const prox = document.getElementById(`caixa${l}${c+1}`);
-        if (prox) prox.focus();
+        if (prox && window.innerWidth > 768) prox.focus();
     }
 }
 
 function focarAnterior(l, c) {
     if (c > 0) {
         const ant = document.getElementById(`caixa${l}${c-1}`);
-        if (ant) ant.focus();
+        if (ant && window.innerWidth > 768) ant.focus();
     }
 }
 
