@@ -54,22 +54,24 @@ h1 {
 /* Teclado Virtual - Escondido por padrão */
 .teclado-container {
     display: none;
-    margin-top: 25px;
+    margin: 30px auto 10px;
+    width: 100%;
+    max-width: 400px;
     flex-direction: column;
-    gap: 8px;
-    padding: 10px;
+    gap: 10px; /* Espaço entre as linhas */
+    padding: 0 5px;
 }
 
 .teclado-linha {
     display: flex;
     justify-content: center;
-    gap: 6px;
+    gap: 8px; /* Espaço entre as teclas */
 }
 
 .tecla {
     flex: 1;
-    max-width: 50px;
-    height: 58px;
+    min-width: 40px;
+    height: 55px;
     background-color: #818384;
     color: white;
     border: none;
@@ -81,21 +83,31 @@ h1 {
     align-items: center;
     justify-content: center;
     user-select: none;
+    touch-action: manipulation;
+    transition: background-color 0.1s;
+}
+
+.tecla:active {
+    background-color: #565758; /* Feedback visual ao tocar */
 }
 
 .tecla-especial {
-    max-width: 80px;
-    background-color: #538d4e;
-    font-size: 0.8rem;
+    flex: 1.5; /* Deixa o ENTER e o Apagar um pouco maiores */
+    background-color: #565758;
+    font-size: 0.85rem;
 }
 
-/* Mostrar teclado apenas no mobile */
+/* Mostrar teclado e remover cursor no mobile */
 @media (max-width: 768px) {
     .teclado-container {
         display: flex;
     }
     .caixa-letra {
-        caret-color: transparent; /* Remove cursor piscante */
+        caret-color: transparent; 
+        outline: none; /* Remove a borda de foco azul padrão */
+    }
+    .caixa-letra:focus {
+        border-color: #818384; /* Mantém a borda cinza mesmo focada */
     }
 }
 
