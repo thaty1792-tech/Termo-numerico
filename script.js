@@ -21,7 +21,8 @@ function iniciarJogo() {
     tentativas = 0;
     document.getElementById("resultado").textContent = "";
     criarCaixas();
-    // Apenas foca automaticamente se não for mobile para evitar abrir o teclado nativo
+    
+    // Foca na primeira caixa apenas se não for mobile para não abrir teclado acidentalmente
     if (window.innerWidth > 768) {
         setTimeout(focarPrimeiraCaixa, 100);
     }
@@ -39,17 +40,19 @@ function criarCaixas() {
         for (let j = 0; j < TAMANHO_CODIGO; j++) {
             const input = document.createElement("input");
             input.type = "text";
-            input.inputMode = "numeric";
             input.maxLength = 1;
             input.classList.add("caixa-letra");
             input.id = `caixa${i}${j}`;
             input.autocomplete = "off";
             
-            // Se for mobile, torna o input apenas leitura para usar o teclado virtual
+            // Bloqueia o teclado nativo do celular
             if (window.innerWidth <= 768) {
-                input.setAttribute('readonly', 'readonly');
+                input.inputMode = "none"; 
+            } else {
+                input.inputMode = "numeric";
             }
-            
+
+            // Eventos para teclado físico (Desktop)
             input.addEventListener('input', (e) => {
                 if (numerosPermitidos.test(e.target.value)) {
                     focarProxima(i, j);
@@ -70,7 +73,8 @@ function criarCaixas() {
     }
 }
 
-// Funções para o Teclado Virtual
+// --- Lógica do Teclado Virtual ---
+
 function digitarNoTeclado(numero) {
     const col = obterColunaAtual();
     const inputAtual = document.getElementById(`caixa${tentativas}${col}`);
@@ -85,7 +89,7 @@ function apagarNoTeclado() {
     let col = obterColunaAtual();
     let inputAtual = document.getElementById(`caixa${tentativas}${col}`);
     
-    // Se a caixa atual estiver vazia e não for a primeira, volta e apaga
+    // Se a caixa atual estiver vazia, apaga a anterior
     if (inputAtual.value === "" && col > 0) {
         const inputAnterior = document.getElementById(`caixa${tentativas}${col - 1}`);
         inputAnterior.value = "";
@@ -100,8 +104,10 @@ function obterColunaAtual() {
     for (let i = 0; i < caixas.length; i++) {
         if (caixas[i].value === "") return i;
     }
-    return TAMANHO_CODIGO - 1;
+    return TAMANHO_CODIGO - 1; // Retorna a última se estiver tudo cheio
 }
+
+// --- Verificação e Regras ---
 
 function verificarPalavra() {
     const linhas = document.querySelectorAll(".linha-caixas");
@@ -120,6 +126,7 @@ function verificarPalavra() {
     }
 
     let acertos = 0;
+    // Primeiro passo: Verdes
     for (let i = 0; i < TAMANHO_CODIGO; i++) {
         if (palpite[i] === palavraSecreta[i]) {
             resultadoCores[i] = "verde";
@@ -128,6 +135,7 @@ function verificarPalavra() {
         }
     }
 
+    // Segundo passo: Amarelos
     for (let i = 0; i < TAMANHO_CODIGO; i++) {
         if (resultadoCores[i] === "cinza") {
             let numPalpite = palpite[i];
@@ -138,6 +146,7 @@ function verificarPalavra() {
         }
     }
 
+    // Aplicar Cores Visuais
     for (let i = 0; i < TAMANHO_CODIGO; i++) {
         caixas[i].style.color = "white";
         caixas[i].style.border = "none";
@@ -158,12 +167,15 @@ function verificarPalavra() {
             bloquearTudo();
         } else {
             linhas[tentativas].classList.remove("linha-bloqueada");
+            // Foca na nova linha apenas se não for mobile
             if (window.innerWidth > 768) {
                 document.getElementById(`caixa${tentativas}0`).focus();
             }
         }
     }
 }
+
+// --- Auxiliares de Navegação ---
 
 function focarPrimeiraCaixa() {
     const primeira = document.getElementById("caixa00");
@@ -186,6 +198,8 @@ function focarAnterior(l, c) {
 
 function bloquearTudo() {
     document.querySelectorAll(".caixa-letra").forEach(c => c.disabled = true);
+    // Esconde o teclado virtual ao fim do jogo
+    document.getElementById("teclado-virtual").style.display = "none";
 }
 
 function mostrarPopup() { document.getElementById("popup").style.display = "block"; }
