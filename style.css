@@ -1,7 +1,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
     text-align: center;
-    background-color: #121213; /* Cor mais próxima do Termo original */
+    background-color: #121213;
     color: white;
     margin: 0;
     padding: 10px;
@@ -39,11 +39,9 @@ h1 {
     background-color: transparent;
     color: white;
     text-transform: uppercase;
-    /* Impede zoom automático no iOS */
     font-size: 16px; 
 }
 
-/* Garante que o input mantenha um tamanho visual bom mesmo com o font-size de 16px */
 @media (min-width: 450px) {
     .caixa-letra { font-size: 1.8rem; }
 }
@@ -51,6 +49,54 @@ h1 {
 .linha-bloqueada {
     pointer-events: none;
     opacity: 0.8;
+}
+
+/* Teclado Virtual - Escondido por padrão */
+.teclado-container {
+    display: none;
+    margin-top: 25px;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+}
+
+.teclado-linha {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.tecla {
+    flex: 1;
+    max-width: 50px;
+    height: 58px;
+    background-color: #818384;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.tecla-especial {
+    max-width: 80px;
+    background-color: #538d4e;
+    font-size: 0.8rem;
+}
+
+/* Mostrar teclado apenas no mobile */
+@media (max-width: 768px) {
+    .teclado-container {
+        display: flex;
+    }
+    .caixa-letra {
+        caret-color: transparent; /* Remove cursor piscante */
+    }
 }
 
 .controles { margin: 20px 0; display: flex; justify-content: center; gap: 10px; }
