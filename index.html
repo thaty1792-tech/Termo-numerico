@@ -22,6 +22,27 @@
             <button class="btn-ajuda" onclick="mostrarPopup()">Dúvidas</button>
         </div>
 
+        <div id="teclado-virtual" class="teclado-container">
+            <div class="teclado-linha">
+                <button class="tecla" onclick="digitarNoTeclado('1')">1</button>
+                <button class="tecla" onclick="digitarNoTeclado('2')">2</button>
+                <button class="tecla" onclick="digitarNoTeclado('3')">3</button>
+                <button class="tecla" onclick="digitarNoTeclado('4')">4</button>
+                <button class="tecla" onclick="digitarNoTeclado('5')">5</button>
+            </div>
+            <div class="teclado-linha">
+                <button class="tecla" onclick="digitarNoTeclado('6')">6</button>
+                <button class="tecla" onclick="digitarNoTeclado('7')">7</button>
+                <button class="tecla" onclick="digitarNoTeclado('8')">8</button>
+                <button class="tecla" onclick="digitarNoTeclado('9')">9</button>
+                <button class="tecla" onclick="digitarNoTeclado('0')">0</button>
+            </div>
+            <div class="teclado-linha">
+                <button class="tecla tecla-especial" onclick="apagarNoTeclado()">⌫</button>
+                <button class="tecla tecla-especial" onclick="verificarPalavra()">ENTER</button>
+            </div>
+        </div>
+
         <div id="popup" class="popup">
             <h3>Regras do Jogo</h3>
             <p>Descubra o código secreto de 5 números:</p>
